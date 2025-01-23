@@ -20,4 +20,9 @@ extern struct  PlayerStatus
 
 void initPlayer();//プレイヤー初期化
 void UpdatePlayer(Floor floors[],int floorCount);//プレイヤー更新
+void PlayerMove();//プレイヤー移動処理
+void PlayerJump();//プレイヤージャンプ処理
+void PlayerGra();//プレイヤー重力処理
+void PlayerCollision(class Floor floors[], int floorCount);//プレイヤーの床との衝突判定と処理
+void PlayerPosi();//プレイヤー座標更新
 void DrawPlayer();//プレイヤー描画

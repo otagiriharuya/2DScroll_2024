@@ -8,8 +8,8 @@ void initFloors(Floor floors[], int& floorCount)
 	floorCount = 5;
 	floors[0] = { 50, 400, 200, 30 };
 	floors[1] = { 300, 300, 150, 30 };
-	//floors[2] = { 600, 250, 100, 30 };
-	floors[3] = { 680,80,1,10 };
+	floors[2] = { 600, 250, 100, 30 };
+	floors[3] = { 900,80,100,20 };
 	floors[4] = { 0, 700, 1000, 100 };//ç≈â∫ïîÇÃè∞
 }
 

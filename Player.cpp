@@ -27,10 +27,19 @@ void initPlayer()
 }
 
 //プレイヤー更新
-void UpdatePlayer(Floor floors[],int floorCount)
+void UpdatePlayer(Floor floors[], int floorCount)
+{
+	PlayerMove();//移動
+	PlayerJump();//ジャンプ
+	PlayerGra();//重力
+	PlayerCollision(floors, floorCount);//当たり判定
+	PlayerPosi();//座標
+}
+
+//プレイヤー移動処理
+void PlayerMove()
 {
 	const float Move_Speed = 5;//横移動量
-
 	//横移動
 	if (CheckHitKey(KEY_INPUT_A) == 1)
 	{
@@ -44,8 +53,11 @@ void UpdatePlayer(Floor floors[],int floorCount)
 	{
 		player.vx = 0;
 	}
+}
 
-	//ジャンプ
+//プレイヤージャンプ処理
+void PlayerJump()
+{
 	if (CheckHitKey(KEY_INPUT_SPACE) && !player.isSpace)
 	{
 		player.isSpace = true;
@@ -74,78 +86,58 @@ void UpdatePlayer(Floor floors[],int floorCount)
 	}
 	if (!CheckHitKey(KEY_INPUT_SPACE))
 		player.isSpace = false;
+}
 
+//プレイヤー重力処理
+void PlayerGra()
+{
 	//重力による落下
 	player.vy += Gravity;
-	player.y += player.vy;
 	//落下処理
 	if (player.staet != 0 && player.vy > 0)
 		player.staet = 3;//落下中
+}
 
-	//移動
-	player.x += player.vx;
-	player.y += player.vy;
-
+//プレイヤーの床との衝突判定
+void PlayerCollision(Floor floors[], int floorCount)
+{
 	//床との当たり判定
 	player.staet = 3;//いったん地面についていない状態にする
-	for (int i = 0; i < floorCount;++i)
+	for (int i = 0; i < floorCount; ++i)
 	{
 		Floor& floor = floors[i];//床情報代入
-		//円と矩形の当たり判定
-		float closestX = player.x;
-		float closestY = player.y;
-
-		if (player.x < floor.x)
-			closestX = floor.x;
-		else if (player.x > floor.x + floor.width)
-			closestX = floor.x + floor.width;
-
-		if (player.y < floor.y)
-			closestY = floor.y;
-		else if (player.y > floor.y + floor.height)
-			closestY = floor.x + floor.height;
-
-		float distX = player.x - closestX;
-		float distY = player.y - closestY;
-		float distance = sqrt(distX * distX + distY * distY);
-		if (distance < player.r)
-			DrawLine(player.x, player.y, closestX, closestY, GetColor(255, 255, 255));
-		if (distance < player.r)
+		bool isColliding = CheckCollision(player.x, player.y, player.r
+			, floor.x, floor.y, floor.width, floor.height);
+		//当たり判定があったときの処理
+		if (isColliding)
 		{
-			//着地処理
-			if (player.vy > 0 && player.y < floor.y)
+			if (player.vy >= 0 && player.y - player.r < floor.y)
 			{
+				// 床の上からの衝突
 				player.y = floor.y - player.r;
 				player.vy = 0;
-				player.staet = 0;//着地状態にする
-				player.jumpCount = 0;//ジャンプ回数リセット
-				continue;//着地した場合は，めり込み解消をスキップ
+				player.staet = 0;
+				player.jumpCount = 0;
 			}
-			// 天井判定
-			else if (player.vy < 0 && player.y > floor.y + floor.height) {
+			else if (player.vy <= 0 && player.y + player.r > floor.y + floor.height)
+			{
+				// 床の下からの衝突
 				player.y = floor.y + floor.height + player.r;
 				player.vy = 0;
-				player.jumpCount = 2;
-				continue;//天井に接触した場合は，めり込み解消をスキップ
 			}
-
-			// めり込みを解消
-			else {
-				if (player.r < floor.y)
-				{
-					float overlap = player.r - distance;
-					if (distX > 0)
-						player.x -= overlap;
-					else if (distX < 0)
-						player.x += overlap;
-				}
-			}
-			// 画面端処理
-			if (player.x < player.r) player.x = player.r;
-			if (player.x > 1000 - player.r) player.x = 1000 - player.r;
 		}
-
 	}
+}
+
+//プレイヤー座標更新
+void PlayerPosi()
+{
+	// 画面端処理
+		if (player.x < player.r) player.x = player.r;
+	if (player.x > 1000 - player.r) player.x = 1000 - player.r;
+	// 移動
+	player.x += player.vx;
+	player.y += player.vy;
 }
 
 //プレイヤー描画

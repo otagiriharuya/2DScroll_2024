@@ -10,3 +10,7 @@ extern enum Type
 };
 
 const float Gravity = 0.3f;//d—Í‰Á‘¬“x
+
+//‰~‚Æ‹éŒ`‚Ì“–‚½‚è”»’èŠÖ”
+bool CheckCollision(float circleX, float circleY, float circleR,
+	float rectX, float rectY, float rectWidth, float rectHeight);
