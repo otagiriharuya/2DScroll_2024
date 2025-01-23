@@ -4,13 +4,14 @@
 #include "Game.h"
 #include "Floor.h"
 
-
+//グローバル変数
 Floor floors[10];
 int floorCount = 0;
 
-void init();
-void Update();
-void Draw();
+//プロトタイプ宣言
+void GameInit();//ゲームの初期化
+void GameUpdate();//ゲームの更新
+void GameDraw();//ゲームの描画
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -22,36 +23,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	SetDrawScreen(DX_SCREEN_BACK);	//裏画面を描画対象へ
 
-	init();
+	GameInit();//初期化
 
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
-		
-		Update();
+		ClearDrawScreen();//裏画面の描画を全て消去
 
-		
-		
-		Draw();
+		GameUpdate();//更新
+		GameDraw();//描画
 
 		ScreenFlip();//裏画面と表画面の入替
-		ClearDrawScreen();//裏画面の描画を全て消去
 	}
 	DxLib_End();// ＤＸライブラリ使用の終了処理
 	return 0;// ソフトの終了 
 }
 
-void init()
+void GameInit()
 {
 	initEffect();
 	initPlayer();
 	initFloors(floors, floorCount);
 }
-void Update()
+void GameUpdate()
 {
 	UpdateEffect();
 	UpdatePlayer(floors, floorCount);
 }
-void Draw()
+void GameDraw()
 {
 	DrawEffect();
 	DrawPlayer();

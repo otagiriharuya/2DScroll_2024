@@ -1,6 +1,5 @@
 #include "DxLib.h"
 #include "Player.h"
-#include "Action.h"
 #include "Effect.h"
 #include "Game.h"
 #include "Floor.h"
