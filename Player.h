@@ -1,19 +1,23 @@
 #pragma once
+#include "Game.h"
+#include "Floor.h"
 
-void initPlayer();//プレイヤー初期化
-void UpdatePlayer();//プレイヤー更新
-void DrawPlayer();//プレイヤー描画
-
-//プレイヤーのステータス
+//プレイヤーの構造体
 extern struct  PlayerStatus
 {
-	double Hp;//体力
-	double x;//x座標
-	double y;//y座標
-	double r;//半径
-	double vx;//xの移動量
-	double vy;//yの移動量
+	float x, y;//座標
+	float vx, vy;//移動量
+	float Hp;//体力
+	float r;//半径
+	float jumpPower;//ジャンプ力
 	int img;//画像
-	int JumpSu;//ジャンプした回数
-	bool isJump;//ジャンプしたか
+	int jumpCount;//ジャンプした回数
+	int maxJumps;//最大ジャンプ数
+	int staet;//現在の状態(0:地上1:1段ジャンプ中2:2段ジャンプ中3:落下中)
+	bool isSpace;//スペースキーが押されたか
+	Type type;
 };
+
+void initPlayer();//プレイヤー初期化
+void UpdatePlayer(Floor floors[],int floorCount);//プレイヤー更新
+void DrawPlayer();//プレイヤー描画

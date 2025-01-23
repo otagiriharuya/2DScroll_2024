@@ -1,7 +1,7 @@
 #include "DxLib.h"
 #include "Action.h"
 
-double MoveX(double x, double vx)
+double MoveX(float x, float vx)
 {
 	return 0;
 }
