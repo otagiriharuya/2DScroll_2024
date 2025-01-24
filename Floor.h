@@ -6,6 +6,7 @@ struct Floor
 {
 	float x, y;//À•W
 	float width, height;//•‚Æ‚‚³
+	int img;//‰æ‘œ
 };
 
 // °‚Ì‰Šú‰»
