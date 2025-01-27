@@ -10,18 +10,19 @@ std::vector<Floor> floors;
 //プレイヤー初期化
 void initPlayer()
 {
-	//player.img = LoadGraph("");
-	player.Hp = 5;
-	player.x = 100;
-	player.y = 300;
-	player.vx = 0;
-	player.vy = 0;
+	player.img = LoadGraph("Ghost.png",true);//画像
+	player.Hp = 5;//体力
+	player.x = 100;//x座標
+	player.y = 300;//y座標
+	player.vx = 0;//横移動量
+	player.vy = 0;//縦移動量
 	player.jumpPower = -11.0f;//ジャンプ力
-	player.r = 50;
-	player.jumpCount = 0;
-	player.maxJumps = 2;
-	player.isSpace = false;
-	player.staet = 0;
+	player.r = 25;//半径
+	player.jumpCount = 0;//ジャンプした回数
+	player.maxJumps = 2;//最大ジャンプ数
+	player.isSpace = false;//Spaceキーを押したか
+	player.isRight = true;//右を向いているか
+	player.staet = 0;//現在の状態
 	
 }
 
@@ -38,15 +39,21 @@ void UpdatePlayer(Floor floors[], int floorCount)
 //プレイヤー移動処理
 void PlayerMove()
 {
-	const float Move_Speed = 5;//横移動量
+	float Move_Speed = 3;//横移動量
+	if (CheckHitKey(KEY_INPUT_LSHIFT))
+		Move_Speed = Move_Speed * 2;
+	if (player.staet != 0)
+		Move_Speed = 3;
 	//横移動
-	if (CheckHitKey(KEY_INPUT_A) == 1)
+	if (CheckHitKey(KEY_INPUT_A))
 	{
 		player.vx = -Move_Speed;
+		player.isRight = false;
 	}
-	else if (CheckHitKey(KEY_INPUT_D) == 1)
+	else if (CheckHitKey(KEY_INPUT_D))
 	{
 		player.vx = Move_Speed;
+		player.isRight = true;
 	}
 	else
 	{
@@ -142,8 +149,8 @@ void PlayerPosi()
 //プレイヤー描画
 void DrawPlayer()
 {
-	DrawCircle(player.x,player.y,player.r, GetColor(255, 255, 255), true);
-	//DrawGraph(Cha_Player.x, Cha_Player.y, Cha_Player.img, true);
+	//DrawCircle(player.x,player.y,player.r, GetColor(255, 255, 255), false);
+	DrawReverseGraph(player.x-player.r, player.y-player.r, player.img, true,!player.isRight);
 
 	//DrawFormatString(0, 0, GetColor(255, 255, 255), "ｘ：%f,ｙ：%f\n%d",Obj_Player.x,Obj_Player.y,player.jumpCount);
 }
