@@ -1,6 +1,6 @@
 #include "DxLib.h"
-#include "Game.h"
 #include <iostream>
+#include "Game.h"
 
 bool CheckCollision(float circleX, float circleY, float circleR,
     float rectX, float rectY, float rectWidth, float rectHeight)

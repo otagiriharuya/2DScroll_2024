@@ -1,6 +1,6 @@
 #pragma once
 
-extern enum Type 
+enum class Type 
 {
 	Player,//Ž©‹@
 	Enemy,//“G

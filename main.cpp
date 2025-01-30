@@ -1,17 +1,17 @@
 #include "DxLib.h"
+#include <chrono>
 #include "Player.h"
 #include "Effect.h"
 #include "Game.h"
 #include "Floor.h"
 
-//グローバル変数
-Floor floors[10];
-int floorCount = 0;
-
 //プロトタイプ宣言
-void GameInit();//ゲームの初期化
-void GameUpdate();//ゲームの更新
+void GameInitResources();//ゲームリソースの初期化
+void GameInitObj();//ゲームオブジェの初期化
+void GameUpdate(float deltaTime, std::vector<Floor>& floors);//ゲームの更新
 void GameDraw();//ゲームの描画
+std::chrono::system_clock::time_point prevTime;//時間計測用
+ 
 // プログラムは WinMain から始まります
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -23,13 +23,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	SetDrawScreen(DX_SCREEN_BACK);	//裏画面を描画対象へ
 
-	GameInit();//初期化
+	GameInitResources();//ゲームリソースの初期化
+	GameInitObj();//ゲームオブジェの初期化
+
+	prevTime = std::chrono::system_clock::now();//前回時間を取得
 
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
 		ClearDrawScreen();//裏画面の描画を全て消去
-
-		GameUpdate();//更新
+		//時間計測
+		std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();//現在時間取得
+		float deltaTime = std::chrono::duration_cast<std::chrono::microseconds>(currentTime - prevTime).count()/ 1000000.0f;
+		prevTime = currentTime;
+		
+		GameUpdate(deltaTime,floors);//更新
 		GameDraw();//描画
 
 		ScreenFlip();//裏画面と表画面の入替
@@ -38,20 +45,30 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	return 0;// ソフトの終了 
 }
 
-void GameInit()
+//ゲームリソース初期化
+void GameInitResources()
 {
 	initEffect();
-	initPlayer();
-	initFloors(floors, floorCount);
 }
-void GameUpdate()
+
+//ゲームオブジェ初期化
+void GameInitObj()
 {
-	UpdateEffect();
-	UpdatePlayer(floors, floorCount);
+	initPlayer();
+	initFloors();
 }
+
+//ゲーム更新
+void GameUpdate(float deltaTime, std::vector<Floor>& floors)
+{
+	UpdateEffect(deltaTime);
+	UpdatePlayer(floors, deltaTime);
+}
+
+//ゲーム描画
 void GameDraw()
 {
 	DrawEffect();
 	DrawPlayer();
-	DrawFloors(floors, floorCount);
+	DrawFloors();
 }

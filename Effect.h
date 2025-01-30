@@ -1,19 +1,21 @@
 #pragma once
+#include <vector>
 
-const int EffectNum = 100;
-extern int Jumpimg[5];//ジャンプ画像5コマ
+const int JumpMaxNum = 5;//ジャンプエフェクトの最大コマ数
+const int EffectNum = 100;//エフェクト最大数
 
 struct Effect
 {
-	float x;
-	float y;
-	float animeNo = 0;//今のコマ
-	int maxAnimeNo;//最大コマ数
-	bool enable = false;//再生有効フラグ
+	float x,y =0;//座標
+	int animeNo = 0;//現在のコマ数
+	bool isUsed = false;//再生有効フラグ
 };
 
-extern Effect jump[EffectNum];//ジャンプ用の変数
+//ジャンプエフェクトの配列
+extern std::vector<int> Jumpimg;//ジャンプ画像
+extern std::vector<Effect> jump;//ジャンプ用の変数
 
 void initEffect();
-void UpdateEffect();
+void UpdateEffect(float deltaTime);
 void DrawEffect();
+void StartJumpEffect(float x, float y);

@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <cstdint>//int32_t‚ğg—p‚·‚é‚½‚ß
 
 //°‚Ì\‘¢‘Ì
 struct Floor
@@ -9,8 +10,10 @@ struct Floor
 	int img;//‰æ‘œ
 };
 
-// °‚Ì‰Šú‰»
-void initFloors(Floor floors[],int& floorCount);
+extern std::vector<Floor> floors;
 
-// °‚Ì•`‰æ
-void DrawFloors(Floor floors[], int& floorCount);
+//°‚Ì‰Šú‰»
+void initFloors();
+
+//°‚Ì•`‰æ
+void DrawFloors();
