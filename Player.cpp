@@ -34,7 +34,7 @@ void initPlayer()
 }
 
 //重力加速度敵用
-void PlayerGra()
+static void PlayerGra()
 {
 	//重力による落下
 	player.vy += Gravity;
@@ -44,7 +44,7 @@ void PlayerGra()
 }
 
 //プレイヤー移動処理
-void PlayerMove()
+static void PlayerMove()
 {
 	float MoveSpeed = PlayerMoveSpeed;//横移動量
 
@@ -73,7 +73,7 @@ void PlayerMove()
 }
 
 //プレイヤージャンプ処理
-void PlayerJump()
+static void PlayerJump()
 {
 	if (CheckHitKey(KEY_INPUT_SPACE) && !player.isSpace)
 	{
@@ -97,7 +97,7 @@ void PlayerJump()
 }
 
 //床との衝突判定
-bool CheckCollision(float playerX, float playerY, float playerR,const Floor& floor)
+static bool CheckCollision(float playerX, float playerY, float playerR,const Floor& floor)
 {
 	//円と矩形の当たり判定
 	float circleDistanceX = std::abs(playerX - floor.x - floor.width / 2);
@@ -116,7 +116,7 @@ bool CheckCollision(float playerX, float playerY, float playerR,const Floor& flo
 }
 
 //プレイヤーの床との衝突判定
-void PlayerCollision(const std::vector<Floor>& floors)
+static void PlayerCollision(const std::vector<Floor>& floors)
 {
 	player.state = PlayerState::Falling;
 	for (const auto& floor : floors)
@@ -141,7 +141,7 @@ void PlayerCollision(const std::vector<Floor>& floors)
 }
 
 //プレイヤー座標更新
-void PlayerPosi()
+static void PlayerPosi()
 {
 	//画面端処理
 	if (player.x < player.r) 
@@ -161,7 +161,6 @@ void UpdatePlayer(const std::vector<Floor>& floors, float deltaTime)
 	PlayerGra();//重力
 	PlayerCollision(floors);//当たり判定
 	PlayerPosi();//座標
-
 }
 
 //プレイヤー描画

@@ -1,74 +1,64 @@
 #include "DxLib.h"
-#include <vector>
-#include "Player.h"
 #include "Floor.h"
+#include "FloorManager.h"
 
-std::vector<Floor> floors;//床のリスト
+extern FloorManager floorManager;//フロアマネージャーのインスタンスを宣言
 
 //床の初期化
-void initFloors()
+void initFloors(FloorManager& floorManager)
 {
     Floor floor0 = { 50,400,200,50 };
     int result = LoadGraph("Bloc03.jpg", true);
     if (result == -1)
     {
         MessageBox(nullptr, "Bloc03.jpgの読み込みに失敗しました", "エラー", MB_OK | MB_ICONERROR);
-        return;//追加
+        //return;
     }
     else
         floor0.img = result;
-    floors.push_back(floor0);
+    floorManager.AddFloor(floor0);
 
     Floor floor1 = { 300, 300, 150, 50 };
     result = LoadGraph("Bloc02.jpg", true);
     if (result == -1)
     {
         MessageBox(nullptr, "Bloc02.jpgの読み込みに失敗しました", "エラー", MB_OK | MB_ICONERROR);
-        return;//追加
+        return;
     }
     else
         floor1.img = result;
-    floors.push_back(floor1);
+    floorManager.AddFloor(floor1);
 
     Floor floor2 = { 600, 250, 100, 50 };
     result = LoadGraph("Bloc01.jpg", true);
     if (result == -1)
     {
         MessageBox(nullptr, "Bloc01.jpgの読み込みに失敗しました", "エラー", MB_OK | MB_ICONERROR);
-        return;//追加
+        return;
     }
     else
         floor2.img = result;
-    floors.push_back(floor2);
+    floorManager.AddFloor(floor2);
 
     Floor floor3 = { 900, 80, 100, 50 };
     result = LoadGraph("Bloc01.jpg", true);
     if (result == -1)
     {
         MessageBox(nullptr, "Bloc01.jpgの読み込みに失敗しました", "エラー", MB_OK | MB_ICONERROR);
-        return;//追加
+        return;
     }
     else
         floor3.img = result;
-    floors.push_back(floor3);
+    floorManager.AddFloor(floor3);
 
     Floor floor4 = { 0, 700, 1000, 100 };
     result = LoadGraph("Ground.png", true);
     if (result == -1)
     {
         MessageBox(nullptr, "Ground.pngの読み込みに失敗しました", "エラー", MB_OK | MB_ICONERROR);
-        return;//追加
+        return;
     }
     else
         floor4.img = result;
-    floors.push_back(floor4);
-}
-
-//床の描画
-void DrawFloors()
-{
-    for (const auto& floor : floors)
-    {
-        DrawGraph(floor.x, floor.y, floor.img, true);
-    }
+    floorManager.AddFloor(floor4);
 }

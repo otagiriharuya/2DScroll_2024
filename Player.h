@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include "Game.h"
 #include "Floor.h"
 
 enum class PlayerState
@@ -25,16 +24,14 @@ struct  PlayerStatus
 	bool isSpace;//スペースキーが押されたか
 	bool isRight;//右を向いているか
 	PlayerState state;//現在の状態
-	Type type;
 };
 
-extern PlayerStatus player;
+//重力加速度
+const float Gravity = 0.8f;
 
-void initPlayer();//プレイヤー初期化
-void UpdatePlayer(const std::vector<Floor>& floors,float deltaTime);//プレイヤー更新
-void PlayerMove();//プレイヤー移動処理
-void PlayerJump();//プレイヤージャンプ処理
-void PlayerGra();//プレイヤー重力処理
-void PlayerCollision(const std::vector<Floor>& floors);//プレイヤーの床との衝突判定と処理
-void PlayerPosi();//プレイヤー座標更新
-void DrawPlayer();//プレイヤー描画
+//プレイヤー初期化
+void initPlayer();
+//プレイヤー更新
+void UpdatePlayer(const std::vector<Floor>& floors, float deltaTime);
+//プレイヤー描画
+void DrawPlayer();

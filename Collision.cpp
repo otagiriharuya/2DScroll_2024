@@ -2,7 +2,7 @@
 #include <iostream>
 #include "Game.h"
 
-bool CheckCollision(float circleX, float circleY, float circleR,
+static bool CheckCollision(float circleX, float circleY, float circleR,
     float rectX, float rectY, float rectWidth, float rectHeight)
 {
     float distX = abs(circleX - (rectX + rectWidth / 2));
