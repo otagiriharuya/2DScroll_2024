@@ -1,17 +1,16 @@
 #include "DxLib.h"
 #include "Effect.h"
+#include "Camera.h"
 
-std::vector<Effect> jump(EffectNum);//ジャンプ用変数
-std::vector<int> Jumpimg(5);//ジャンプ画像
+Effect jump[EffectNum];//ジャンプ用変数
+int Jumpimg[JumpMaxNum];//ジャンプ画像
+const float AnimationSpeed = 10.0f;//アニメーション速度
 
-void initEffect()
+//エフェクト初期化
+void InitEffect()
 {
 	//画像の読込
-	int result01 = LoadDivGraph("Jump.png", 5, 5, 1, 100, 100,Jumpimg.data());
-	//エラー処理
-	if(result01 == -1)
-		MessageBox(nullptr, "画像の読み込みに失敗しました", "エラー", MB_OK | MB_ICONERROR);
-
+	LoadDivGraph("Jump.png", 5, 5, 1, 100, 100, Jumpimg);
 	//ジャンプエフェクトの初期化
 	for (int i = 0; i < EffectNum; ++i)
 	{
@@ -22,12 +21,13 @@ void initEffect()
 	}
 }
 
+//エフェクトの更新
 void UpdateEffect(float deltaTime)
 {
 	//ジャンプ用
 	for (int i = 0; i < EffectNum; ++i)
 	{
-		jump[i].animeNo++;//アニメーションを進める
+		jump[i].animeNo += AnimationSpeed * deltaTime;//アニメーションを進める
 		//コマ数を超えたらエフェクトを終了させる
 		if (jump[i].animeNo >= JumpMaxNum)
 		{
@@ -37,19 +37,20 @@ void UpdateEffect(float deltaTime)
 	}
 }
 
+//エフェクト描画
 void DrawEffect()
 {
 	//ジャンプ用
 	for (int i = 0; i < EffectNum; i++) {
-		if (jump[i].isUsed == true)
+		if (jump[i].isUsed)
 		{
 			int no = jump[i].animeNo;
-			DrawGraph(jump[i].x, jump[i].y, Jumpimg[no % JumpMaxNum], true);
+			DrawGraph(WorldToScreenX(camera, jump[i].x), WorldToScreenY(camera, jump[i].y), Jumpimg[no], true);
 		}
 	}
 }
 
-//ジャンプエフェクトを開始する関数
+//ジャンプエフェクト用関数
 void StartJumpEffect(float x, float y)
 {
 	for (int i = 0; i < EffectNum; ++i)
