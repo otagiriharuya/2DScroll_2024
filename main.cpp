@@ -7,8 +7,6 @@
 #include "Enemy.h" 
 #include <chrono>//時間計測用
 
-Enemy enemy;
-
 //ポーズ画面の選択肢
 enum class PauseMenuChoice
 {
@@ -124,17 +122,17 @@ void Init()
 
     InitCamera(camera, 1000.0f, 800.0f);//カメラ初期化(画面サイズに合わせる)
 
-    InitEnemy(enemy, 700.0f, 450.0f);//敵初期位置指定
+    InitEnemy(enemy, 700.0f, 420.0f);//敵初期位置指定
 }
 
 //更新関数
 void Update(float deltaTime)
 {
     UpdateMap();//マップ更新
+    UpdateEnemy(enemy, deltaTime);//敵更新
     UpdatePlayer(deltaTime);//プレイヤー更新
     UpdateEffect(deltaTime);//エフェクト更新
     UpdateCamera(camera, player.x, player.y);//カメラ更新(プレイヤーの情報を渡す)
-    UpdateEnemy(enemy, deltaTime);//敵更新
 }
 
 //描画関数

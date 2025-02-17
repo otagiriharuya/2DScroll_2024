@@ -3,7 +3,7 @@
 #include "Map.h"
 #include "Camera.h"
 
-extern Enemy enemy;
+Enemy enemy;
 
 //円と矩形の当たり判定
 bool CheckCollision(float circleX, float circleY, float circleR,
@@ -14,12 +14,12 @@ void InitEnemy(Enemy& enemy, float startX, float startY)
 {
     enemy.x = startX;
     enemy.y = startY;
-    enemy.vx = 50.0f;//移動速度 (調整可能)
-    enemy.width = 50.0f;
-    enemy.height = 50.0f;
-    enemy.moveRange = 100.0f;//徘徊範囲(調整可能)
+    enemy.vx = 100.0f;//移動速度
+    enemy.width =80.0f;
+    enemy.height =80.0f;
+    enemy.moveRange = 100.0f;//徘徊範囲
     enemy.initialX = startX;
-    enemy.img = LoadGraph("Ghost.png", true);//敵の画像をロード
+    enemy.img = LoadGraph("Reaper.png", true);//敵の画像をロード
     enemy.isAlive = true;
     enemy.isRight = true;
 }
@@ -51,7 +51,7 @@ void UpdateEnemy(Enemy& enemy, float deltaTime)
             floors[i].x, floors[i].y, floors[i].width, floors[i].height))
         {
             isCollision = true;
-            //当たり判定時の処理（例：落下を止める）
+            //当たり判定時の処理(例：落下を止める)
             //if (enemy.vy > 0)
             {
                 enemy.y = floors[i].y - enemy.height / 2;//めり込み量だけ戻す

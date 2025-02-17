@@ -2,9 +2,11 @@
 #include "Player.h"
 #include "Map.h"
 #include "Effect.h"
+#include "Enemy.h"
 #include "Camera.h"
 #include "GameState.h"
 #include <algorithm>
+#include <math.h>
 
 // 定数
 const float Gravity = 7.0f;//重力
@@ -20,7 +22,6 @@ PlayerStatus player;//プレイヤーインスタンス
 void InitPlayer()
 {
 	player.img = LoadGraph("Ghost.png", true);//画像
-	player.Hp = 5;//体力
 	player.x = 150;//x座標
 	player.y = 600;//y座標
 	player.vx = 0;//横移動量
@@ -33,6 +34,20 @@ void InitPlayer()
 	player.isRight = true;//右を向いているか
 	player.isAlive = true;//生きているか
 	player.state = PlayerState::Ground;//現在の状態
+
+	//体力画像読み込み
+	player.hpFullImg = LoadGraph("Life1.0.png");//最大
+	player.hpHalfImg = LoadGraph("Life0.5.png");//半分
+	player.hpEmptyImg = LoadGraph("Life0.0.png");//空
+
+	//体力関連初期化g
+	player.maxHp = 5;//最大体力
+	player.Hp = 5;//体力
+	player.hitCoolDownTime = 1.0f;//クールダウンタイムを設定
+	player.hitCoolDownTimer = 0.0f;//クールダウンタイマー
+	player.hpX = 10;//体力表示X座標
+	player.hpY = 10;//体力表示Y座標
+	player.hpOffsetX = 40;//ハートの間隔
 }
 
 //プレイヤー更新関数
@@ -42,7 +57,7 @@ void UpdatePlayer(float deltaTime)
 	PlayerJump();
 	PlayerGra();
 	PlayerPosi(deltaTime);
-	PlayerCollision();
+	PlayerCollision(deltaTime);
 	PlayerDeath();
 }
 
@@ -149,8 +164,15 @@ bool CheckCollision(float circleX, float circleY, float circleR,
 	return (dx * dx + dy * dy <= (circleR * circleR));
 }
 
+//円同士の当たり判定
+bool CheckCollisionCircles(float x1, float y1, float r1, float x2, float y2, float r2)
+{
+	float distance = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));//距離
+	return distance < r1 + r2;//当たっているか
+}
+
 //プレイヤー当たり判定
-void PlayerCollision()
+void PlayerCollision(float deltaTime)
 {
 	//床との当たり判定
 	bool isCollision = false;
@@ -175,6 +197,31 @@ void PlayerCollision()
 	//地面にいない場合
 	if (!isCollision)
 		player.state = PlayerState::Falling;
+
+	//当たり判定クールダウンタイマーを更新
+	if (player.hitCoolDownTimer > 0.0f)
+	{
+		player.hitCoolDownTimer -= deltaTime;
+	}
+
+	float damage = 0.5f; //一度に減らす体力
+
+	//敵との当たり判定
+    float enemyRadius = enemy.width / 2.0f;
+	//
+	if (enemy.isAlive && player.hitCoolDownTimer <= 0.0f && CheckCollisionCircles(player.x, player.y, player.r, enemy.x, enemy.y, enemyRadius))
+	{
+		//減らす体力が現在のHPを超えないようにする
+		if (damage > player.Hp)
+		{
+			damage = player.Hp;
+		}
+		player.Hp -= damage;//体力を減らす
+
+		if (player.Hp < 0.0f)
+			player.Hp = 0.0f;//体力が0未満にならないようにする
+		player.hitCoolDownTimer = player.hitCoolDownTime;//クールダウンタイマーをリセット
+	}
 }
 
 //プレイヤー死亡判定
@@ -205,4 +252,26 @@ void DrawPlayer()
 	//描画先のX座標,描画先のY座標,画像,透過するか,反転させるか
 	DrawReverseGraph(WorldToScreenX(camera, player.x - 25), WorldToScreenY(camera, player.y - 25),
 		player.img, true, !player.isRight);
+
+	DrawHp();
+}
+
+//体力描画関数
+void DrawHp()
+{
+    for (int i = 0; i < player.maxHp; ++i)
+    {
+        int imgHandle = player.hpEmptyImg;//最初は空のハート
+
+        if (player.Hp >= i + 1)
+        {
+            imgHandle = player.hpFullImg;//満タンのハート
+        }
+        else if (player.Hp > i && player.Hp < i + 1)//半分表示
+        {
+            imgHandle = player.hpHalfImg;//半分のハート
+        }
+
+        DrawGraph(player.hpX + i * player.hpOffsetX, player.hpY, imgHandle, TRUE);
+    }
 }

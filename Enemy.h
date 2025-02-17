@@ -21,6 +21,7 @@ struct EnemyManager
     float respawnInterval = 5.0f;//ƒŠƒXƒ|[ƒ“ŠÔ
 };
 
+extern Enemy enemy;
 extern EnemyManager enemyManager;
 
 void InitEnemy(Enemy& enemy, float startX, float startY);//“G‰Šú‰»

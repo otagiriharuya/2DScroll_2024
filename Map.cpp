@@ -3,6 +3,7 @@
 #include "Camera.h"
 
 Floor floors[MaxFloors];
+int Flag;
 
 //マップ初期化
 void InitMap()
@@ -14,6 +15,8 @@ void InitMap()
 	floors[3] = { 1100,600,200,50 };
 	floors[4] = { 1400,400,150,50 };
 	floors[5] = { 1600,500,250,50 };
+	Flag = LoadGraph("flag.png");//旗
+
 }
 
 //マップ更新
@@ -31,4 +34,6 @@ void DrawMap()
 			WorldToScreenX(camera, floors[i].x + floors[i].width), WorldToScreenY(camera, floors[i].y + floors[i].height),
 			GetColor(255, 255, 255), true);
 	}
+
+	DrawGraph(WorldToScreenX(camera, 1800), WorldToScreenY(camera, 400), Flag, true);
 }
